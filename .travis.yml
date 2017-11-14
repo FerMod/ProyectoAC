@@ -1,0 +1,6 @@
+language: c
+
+compiler: gcc
+
+env:
+  - OMP_NUM_THREADS=4
