@@ -74,6 +74,8 @@ int main (int argc, char **argv) {
 
 		// Comienzo del programa
 
+		printf("\n");
+
 		gettimeofday(&t0, 0);
 		#pragma omp parallel for private(x)
 		for(i=1; i<N1; i++) {
@@ -82,7 +84,7 @@ int main (int argc, char **argv) {
 			E[i] = (x * x / (x * x + 1))*(x * x / (x * x + 1));
 		}
 		gettimeofday(&t1, 0);
-		TrazaTiempo("\nT1", &t0, &t1);
+		TrazaTiempo("T1", &t0, &t1);
 
 		gettimeofday(&t0, 0);
 		#pragma omp parallel for
