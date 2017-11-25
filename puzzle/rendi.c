@@ -52,6 +52,8 @@ void SumarVector(char * pTexto, int *v, int n) {
 
 int main (int argc, char **argv) {
 
+	printf("El buble se va a ejecutar %d veces:\n", VECES);
+
 	for (veces=1; veces<VECES; veces++) {
 
 		//Inicializaciones
@@ -72,9 +74,9 @@ int main (int argc, char **argv) {
 			N[i] = 3;
 		}
 
-		// Comienzo del programa
-
 		printf("\n");
+
+		// Comienzo del programa
 
 		gettimeofday(&t0, 0);
 		#pragma omp parallel for private(x)
