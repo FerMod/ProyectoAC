@@ -52,7 +52,7 @@ void SumarVector(char * pTexto, int *v, int n) {
 
 int main (int argc, char **argv) {
 
-	printf("El buble se va a ejecutar %d veces:\n", VECES);
+	printf("El buble se va a ejecutar %d veces:\n", VECES-1);
 
 	for (veces=1; veces<VECES; veces++) {
 
