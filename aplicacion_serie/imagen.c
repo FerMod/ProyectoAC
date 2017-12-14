@@ -28,8 +28,7 @@
 /*************************              MAIN                  **********************/
 /***********************************************************************************/
 
-void main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   char name[100];
   int i;
 
@@ -51,8 +50,7 @@ void main(int argc, char **argv)
   }
 
   // Lectura de la imagen de entrada: solo imagenes graylevel en formato .pgm
-  if (load_pixmap(argv[1], &imagen_ori) == 0) 
-  {
+  if (load_pixmap(argv[1], &imagen_ori) == 0) {
     printf ("\nError en lectura del fichero de entrada: %s\n\n",argv[1]);
     exit (0);
   }
@@ -76,13 +74,13 @@ void main(int argc, char **argv)
   printf("\n     Ecualizar la imagen: Tej. serie = %1.1f ms", tej2*1000);
 
   gettimeofday(&t0, 0);
-  generar_imagen_encriptada(imagen_ecu, &imagen_cif);
+  //generar_imagen_encriptada(imagen_ecu, &imagen_cif);
   gettimeofday(&t1, 0);
   tej3 = (t1.tv_sec - t0.tv_sec) + (t1.tv_usec - t0.tv_usec) / 1e6;
   printf("\n     Cifrar la imagen: Tej. serie = %1.1f ms\n", tej3*1000);
 
   gettimeofday(&t0, 0);
-  preparar_transmision(imagen_cif);
+  //preparar_transmision(imagen_cif);
   gettimeofday(&t1, 0);
   tej4 = (t1.tv_sec - t0.tv_sec) + (t1.tv_usec - t0.tv_usec) / 1e6;
   printf("     Preparar la transmision: Tej. serie = %1.1f ms\n\n", tej4*1000);
@@ -100,11 +98,16 @@ void main(int argc, char **argv)
   strcpy(name,argv[1]);
   name[strlen(name)-4]='\0';
   strcat(name,"_cif.pgm");
-  store_pixmap(name,imagen_cif);
+  //store_pixmap(name,imagen_cif);
 
   // Liberar memoria de las imagenes 
   liberar_imagen(imagen_ori);
   liberar_imagen(imagen_ecu);
-  liberar_imagen(imagen_cif);
-}
+  //liberar_imagen(imagen_cif);
 
+  printf("\nPulse ENTER para continuar...\n");
+  getchar();
+
+  return 0;
+
+}
