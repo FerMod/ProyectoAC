@@ -54,3 +54,6 @@ dkms.conf
 # Ignore large image files
 *.pgm
 
+*.c.swp
+*.c.save
+aplicacion_serie_OLD/*
