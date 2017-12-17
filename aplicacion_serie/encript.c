@@ -46,8 +46,7 @@ void generar_imagen_encriptada(imagen in_imagen, imagen *out_imagen) {
 	generar_imagen(out_imagen,in_imagen.h,in_imagen.w,NEGRO);
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// POR HACER:
-	// codigo para generar la imagen encriptada
+	// Codigo para generar la imagen encriptada
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	int i, j;
