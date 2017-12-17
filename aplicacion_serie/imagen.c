@@ -65,28 +65,28 @@ int main(int argc, char **argv) {
   histograma(imagen_ori, histo, &vmin_ha);
   gettimeofday(&t1, 0);
   tej1 = (t1.tv_sec - t0.tv_sec) + (t1.tv_usec - t0.tv_usec) / 1e6;
-  printf("\n     Calcular histograma: Tej. serie = %1.1f ms", tej1*1000);
+  printf("\tCalcular histograma: Tej. serie = %1.1f ms\n", tej1*1000);
 
   gettimeofday(&t0, 0);
   generar_imagen_ecualizada(imagen_ori, &imagen_ecu, histo, vmin_ha);
   gettimeofday(&t1, 0);
   tej2 = (t1.tv_sec - t0.tv_sec) + (t1.tv_usec - t0.tv_usec) / 1e6;
-  printf("\n     Ecualizar la imagen: Tej. serie = %1.1f ms", tej2*1000);
+  printf("\tEcualizar la imagen: Tej. serie = %1.1f ms\n", tej2*1000);
 
   gettimeofday(&t0, 0);
-  //generar_imagen_encriptada(imagen_ecu, &imagen_cif);
+  generar_imagen_encriptada(imagen_ecu, &imagen_cif);
   gettimeofday(&t1, 0);
   tej3 = (t1.tv_sec - t0.tv_sec) + (t1.tv_usec - t0.tv_usec) / 1e6;
-  printf("\n     Cifrar la imagen: Tej. serie = %1.1f ms\n", tej3*1000);
+  printf("\tCifrar la imagen: Tej. serie = %1.1f ms\n", tej3*1000);
 
   gettimeofday(&t0, 0);
-  //preparar_transmision(imagen_cif);
+  preparar_transmision(imagen_cif);
   gettimeofday(&t1, 0);
   tej4 = (t1.tv_sec - t0.tv_sec) + (t1.tv_usec - t0.tv_usec) / 1e6;
-  printf("     Preparar la transmision: Tej. serie = %1.1f ms\n\n", tej4*1000);
+  printf("\tPreparar la transmision: Tej. serie = %1.1f ms\n\n", tej4*1000);
 
   tej = tej1+tej2+tej3+tej4;
-  printf("\n     TOTAL: Tej. serie = %1.1f ms\n\n", tej*1000);
+  printf("\tTOTAL: Tej. serie = %1.1f ms\n\n", tej*1000);
  
   /* Escritura de las imagenes en el disco                                         */
   /*********************************************************************************/
@@ -98,15 +98,15 @@ int main(int argc, char **argv) {
   strcpy(name,argv[1]);
   name[strlen(name)-4]='\0';
   strcat(name,"_cif.pgm");
-  //store_pixmap(name,imagen_cif);
+  store_pixmap(name,imagen_cif);
 
   // Liberar memoria de las imagenes 
   liberar_imagen(imagen_ori);
   liberar_imagen(imagen_ecu);
-  //liberar_imagen(imagen_cif);
+  liberar_imagen(imagen_cif);
 
-  printf("\nPulse ENTER para continuar...\n");
-  getchar();
+  //printf("\nPulse ENTER para continuar...\n");
+  //getchar();
 
   return 0;
 
