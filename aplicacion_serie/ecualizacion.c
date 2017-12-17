@@ -4,11 +4,40 @@
    Incluye las funciones de ecualizacion de la imagen
 ***********************************************************************************/
 
+/*
+1. calculate histogram
+
+loop over i ROWS of input image
+    loop over j COLS of input image
+        k = input_image[i][j]
+        hist[k] = hist[k] + 1
+    end loop over j
+    end loop over i
+
+
+2. calculate the sum of hist
+
+loop over i gray levels
+    sum = sum + hist[i]
+    sum_of_hist[i] = sum
+end loop over i
+
+
+3. transform input image to output image
+
+area = area of image (ROWS x COLS)
+Dm = number of gray levels in output image
+loop over i ROWS
+    loop over j COLS
+        k = input_image[i][j]
+        out_image[i][j] = (Dm/area) x sum_of_hist[k]
+    end loop over j
+end loop over i
+*/
+
 #include <stdio.h>
 #include <math.h>
 #include "pixmap.h"
-
-const char *progress = "-\\|/";
 
 typedef struct {
     int intensity;
@@ -20,40 +49,38 @@ typedef struct {
 
 void histograma(imagen in_imagen, int *histo, int *vmin_ha) {
 
-//////////////////////////////////////////////////////////////////////////////////////
-// POR HACER:
-// codigo para el calculo del histograma, histograma acumulado y minimo
-// procesar la imagen in_imagen y calcular histo y vmin_ha
-//////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+    // codigo para el calculo del histograma, histograma acumulado y minimo
+    // procesar la imagen in_imagen y calcular histo y vmin_ha
+    //////////////////////////////////////////////////////////////////////////////////////
 
-    int totalPix = (in_imagen.w * in_imagen.h) - 1;
-
-    Pixel minCdfPixel;
-    minCdfPixel.intensity = 0;
-    minCdfPixel.cdf = MAX_VAL; // Valor minimo de la funcion CDF
-    
+    // Initialize all array values to 0
+    // The compiler will fill the unwritten entries with zeros
+    int pixelHisto[MAX_VAL] = {0};
     int i, j;
-    for(i = 0; i < in_imagen.h-1; i++) {
-        for(j = 0; j < in_imagen.w-1; j++) {
-            histo[in_imagen.im[i][j]]++;
+    for (i = 0; i < in_imagen.h; i++) {
+        for (j = 0; j < in_imagen.w; j++) {
+            pixelHisto[in_imagen.im[i][j]]++;
         }
     }
 
-    // int chisto[MAX_VAL];
-    // chisto[0] = histo[0];
-    printf ("\nHistograma:\n");
-    for (i = 0; i < MAX_VAL; i++) {
-        int cdfVal = histo[i];
-        if(cdfVal< minCdfPixel.cdf) {
-         minCdfPixel.intensity = in_imagen.im[i][j];
-         minCdfPixel.cdf = cdfVal;
-     }
-     printf("%d\n", cdfVal);
-        // chisto[i] = chisto[i-1] + histo[i];
- }
+    Pixel minCdfPixel;
+    minCdfPixel.intensity = 0;
+    minCdfPixel.cdf = pixelHisto[0];
 
- *vmin_ha = minCdfPixel.cdf;
- printf ("vmin_ha -> %d\n", *vmin_ha);
+    for (i = 0; i < MAX_VAL-1; i++) {
+        int cdfVal = pixelHisto[i];
+        if(cdfVal < minCdfPixel.cdf && cdfVal > 0) {
+            minCdfPixel.intensity = i;
+            minCdfPixel.cdf = cdfVal;
+        }
+    }
+    *vmin_ha = minCdfPixel.cdf;
+
+    histo[0] = pixelHisto[0];
+    for(i = 1; i < MAX_VAL; i++) {
+        histo[i] = histo[i-1] + pixelHisto[i];
+    }
 
 }
 
@@ -63,33 +90,21 @@ void histograma(imagen in_imagen, int *histo, int *vmin_ha) {
 /***********************************************************************************/
 
 void generar_imagen_ecualizada(imagen in_imagen, imagen *out_imagen, int *histo, int vmin_ha) {
-    //printf("\n\tProcesando [-]\n\n");
-    int totalPix = (in_imagen.w * in_imagen.h) - 1;
-    int maxIntensity = MAX_VAL-1;
+
+    generar_imagen(out_imagen, in_imagen.h, in_imagen.w, NEGRO);
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    // codigo para generar la imagen ecualizada
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    double factor = (MAX_VAL - 1) / (double)(in_imagen.w * in_imagen.h);
+    
     int i, j;
-    printf ("\nvmin_ha -> %d\n", vmin_ha);
-    printf ("Imagen de %d x %d pixeles.\n", in_imagen.h, in_imagen.w);
-    *out_imagen = in_imagen;
-    for(i = 0; i < in_imagen.h-1; i++) {
-       // printf ("i -> %d\n", i);
-        for(j = 0; j < in_imagen.w-1; j++) {
-            //printf ("j -> %d\n", j);
-            // printf ("%d\n", ((histo[in_imagen.im[i][j]] - vmin_ha) / totalPix) * maxIntensity);
-            //printf ("%f\n", floor((float)(histo[in_imagen.im[i][j]] - vmin_ha / totalPix * maxIntensity)));
-            (*out_imagen).im[i][j] = floor((float)(histo[in_imagen.im[i][j]] - vmin_ha / totalPix * maxIntensity));
-            // if(i % totalPix == 0) {
-            //    printf("%c%c%c]", 8, 8, progress[(i/totalPix) % 4]);
-            //    fflush(stdout);
-            // }
+    for(i = 0; i < in_imagen.h; i++) {
+        for(j = 0; j < in_imagen.w; j++) {
+            out_imagen->im[i][j] = round(factor * (double)(histo[in_imagen.im[i][j]] - vmin_ha));
         }
     }
 
-    generar_imagen(out_imagen,in_imagen.h,in_imagen.w,NEGRO);
-    
-//////////////////////////////////////////////////////////////////////////////////////
-// POR HACER:
-// codigo para generar la imagen ecualizada
-//////////////////////////////////////////////////////////////////////////////////////
-
 }
-
